@@ -5,10 +5,10 @@
 
 import types
 
-from . import AWSObject, AWSProperty
+from . import AWSObject, AWSProperty, Tags
 from .awslambda import Environment, VPCConfig, validate_memory_size
 from .dynamodb import ProvisionedThroughput
-from .validators import positive_integer
+from .validators import exactly_one, positive_integer
 
 assert types  # silence pyflakes
 
@@ -31,13 +31,35 @@ def policy_validator(x):
                          + " policy documents")
 
 
+class DeadLetterQueue(AWSProperty):
+    props = {
+        'Type': (basestring, False),
+        'TargetArn': (basestring, False)
+    }
+
+    def validate(self):
+        valid_types = ['SQS', 'SNS']
+        if ('Type' in self.properties and
+                self.properties['Type'] not in valid_types):
+            raise ValueError('Type must be either SQS or SNS')
+
+
+class S3Location(AWSProperty):
+    props = {
+        "Bucket": (basestring, True),
+        "Key": (basestring, True),
+        "Version": (basestring, False)
+    }
+
+
 class Function(AWSObject):
     resource_type = "AWS::Serverless::Function"
 
     props = {
         'Handler': (basestring, True),
         'Runtime': (basestring, True),
-        'CodeUri': (basestring, True),
+        'CodeUri': ((S3Location, basestring), True),
+        'FunctionName': (basestring, False),
         'Description': (basestring, False),
         'MemorySize': (validate_memory_size, False),
         'Timeout': (positive_integer, False),
@@ -45,7 +67,11 @@ class Function(AWSObject):
         'Policies': (policy_validator, False),
         'Environment': (Environment, False),
         'VpcConfig': (VPCConfig, False),
-        'Events': (dict, False)
+        'Events': (dict, False),
+        'Tags': (Tags, False),
+        'Tracing': (basestring, False),
+        'KmsKeyArn': (basestring, False),
+        'DeadLetterQueue': (DeadLetterQueue, False)
     }
 
 
@@ -54,11 +80,19 @@ class Api(AWSObject):
 
     props = {
         'StageName': (basestring, True),
-        'DefinitionUri': (basestring, True),
+        'DefinitionBody': (dict, False),
+        'DefinitionUri': (basestring, False),
         'CacheClusterEnabled': (bool, False),
         'CacheClusterSize': (basestring, False),
-        'Variables': (dict, False)
+        'Variables': (dict, False),
     }
+
+    def validate(self):
+        conds = [
+            'DefinitionBody',
+            'DefinitionUri',
+        ]
+        exactly_one(self.__class__.__name__, self.properties, conds)
 
 
 class PrimaryKey(AWSProperty):

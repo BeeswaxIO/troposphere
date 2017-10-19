@@ -133,33 +133,44 @@ Missing required property for the AWS resource:
 Currently supported AWS resource types
 ======================================
 
+- AWS::ApiGateway
 - AWS::ApplicationAutoScaling
+- AWS::Athena
 - AWS::AutoScaling
+- AWS::Batch
 - AWS::CertificateManager
 - AWS::CloudFormation
 - AWS::CloudFront
 - AWS::CloudTrail
 - AWS::CloudWatch
+- AWS::CodeBuild
 - AWS::CodeCommit
 - AWS::CodeDeploy
 - AWS::CodePipeline
+- AWS::Cognito
 - AWS::Config
+- AWS::DAX
+- AWS::DMS
+- AWS::DataPipeline
 - AWS::DirectoryService
 - AWS::DynamoDB
 - AWS::EC2
 - AWS::ECR
 - AWS::ECS
+- AWS::EFS
+- AWS::EMR
 - AWS::ElastiCache
 - AWS::ElasticBeanstalk
 - AWS::ElasticLoadBalancing
 - AWS::ElasticLoadBalancingV2
 - AWS::Elasticsearch
-- AWS::EMR
+- AWS::Events
 - AWS::IAM
 - AWS::IoT
-- AWS::Kinesis
-- AWS::KinesisFirehose
 - AWS::KMS
+- AWS::Kinesis
+- AWS::KinesisAnalytics
+- AWS::KinesisFirehose
 - AWS::Lambda
 - AWS::Logs
 - AWS::OpsWorks
@@ -171,6 +182,10 @@ Currently supported AWS resource types
 - AWS::SNS
 - AWS::SQS
 - AWS::SSM
+- AWS::Serverless
+- AWS::StepFunctions
+- AWS::WAF
+- AWS::WAFRegional
 - AWS::WorkSpaces
 
 Currently supported OpenStack resource types

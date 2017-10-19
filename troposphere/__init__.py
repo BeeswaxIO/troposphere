@@ -12,7 +12,7 @@ import types
 
 from . import validators
 
-__version__ = "1.9.5"
+__version__ = "2.0.0"
 
 # constants for DeletionPolicy
 Delete = 'Delete'
@@ -21,13 +21,13 @@ Snapshot = 'Snapshot'
 
 # Pseudo Parameters
 AWS_ACCOUNT_ID = 'AWS::AccountId'
-AWS_DOMAINSUFFIX = 'AWS::DomainSuffix'
 AWS_NOTIFICATION_ARNS = 'AWS::NotificationARNs'
 AWS_NO_VALUE = 'AWS::NoValue'
 AWS_PARTITION = 'AWS::Partition'
 AWS_REGION = 'AWS::Region'
 AWS_STACK_ID = 'AWS::StackId'
 AWS_STACK_NAME = 'AWS::StackName'
+AWS_URL_SUFFIX = 'AWS::URLSuffix'
 
 # Template Limits
 MAX_MAPPINGS = 100
@@ -673,8 +673,7 @@ class Parameter(AWSDeclaration):
             # matches (in the case of a String Type) or can be coerced
             # into one of the number formats.
             param_type = self.properties.get('Type')
-            if param_type == 'String' and not \
-                    isinstance(default, (basestring, Join)):
+            if param_type == 'String' and not isinstance(default, basestring):
                 raise ValueError(error_str %
                                  ('String', type(default), default))
             elif param_type == 'Number':
